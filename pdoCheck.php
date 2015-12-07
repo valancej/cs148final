@@ -22,4 +22,5 @@ $login_user = $row['uUsername'];
 if (!isset($user_check)) {
     header("Location: https://jvalance.w3.uvm.edu/cs148/final/first.php");
 }
+
 ?>
