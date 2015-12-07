@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-require_once 'dbconfig.php';
+include('dbconfig.php');
 
 $error = "";
 if (isset($_POST["submit"])) {
@@ -11,6 +11,7 @@ if (isset($_POST["submit"])) {
 
         $uUsername = $_POST['uUsername'];
         $uPassword = $_POST['uPassword'];
+        
 
         try {
             $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -21,13 +22,17 @@ if (isset($_POST["submit"])) {
         } catch (PDOException $pe) {
             die("Error Connecting" . $pe->getMessage());
         }
+                      
+        $result = $q->rowCount();
 
-        if ($row == $q->fetch()) {
-            $_SESSION['uUsername'] = $row['uUsername'];
+        
+        if ($result == 1) {
+            $_SESSION['uUsername'] = $uUsername;
             header("location: https://jvalance.w3.uvm.edu/cs148/final/home.php");
         } else {
             $error = "Incorrect username or password.";
         }
     }
 }
+
 ?>

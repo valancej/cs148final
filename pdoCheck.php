@@ -4,6 +4,7 @@ include('dbconfig.php');
 session_start();
 $user_check = $_SESSION['uUsername'];
 
+
 try {
     $db = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -15,11 +16,13 @@ try {
     die('ERROR: ' . $ce->getMessage());
 }
 
+
 $row = $ses_q->fetch();
 
 $login_user = $row['uUsername'];
 
-if (!isset($user_check)) {
+
+if (!isset($login_user)) {
     header("Location: https://jvalance.w3.uvm.edu/cs148/final/first.php");
 }
 
