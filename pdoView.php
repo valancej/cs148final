@@ -1,18 +1,39 @@
 <?php
 include("pdoCheck.php");
-require_once 'dbconfig.php';
+require_once 'pdoConfig.php';
 session_start();
 $user_check = $_SESSION['uUsername'];
 
-try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    $sql = "SELECT * FROM tblContactinfo WHERE uUsername = :usercheck";
-    $q = $conn->prepare($sql);
-    $q->execute(array(':usercheck' => $user_check));
-    $q->setFetchMode(PDO::FETCH_ASSOC);
-} catch (PDOException $pe) {
-    die("Error Connecting" . $pe->getMessage());
+
+if ($user_check === 'jvalance') {
+    
+ try {   
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);    
+        $sql = "SELECT * FROM tblContactinfo WHERE uUsername = :usercheck";
+        $q = $conn->prepare($sql);
+        $q->execute(array(':usercheck' => $user_check));
+        $q->setFetchMode(PDO::FETCH_ASSOC);
+    
+    } catch (PDOException $pe) {
+        die("Error Connecting" . $pe->getMessage());
+    }
+    
+} else {
+    try {   
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username_reader, $password_reader);    
+        $sql = "SELECT * FROM tblContactinfo WHERE uUsername = :usercheck";
+        $q = $conn->prepare($sql);
+        $q->execute(array(':usercheck' => $user_check));
+        $q->setFetchMode(PDO::FETCH_ASSOC);
+    
+    } catch (PDOException $pe) {
+        die("Error Connecting" . $pe->getMessage());
+    }
 }
+
+
+
+
 ?>
 
 <?php
@@ -92,10 +113,16 @@ echo $user_check;
                     <th>Home Address</th>
                     <th>Contact Methods Available</th>
                     <th>Send Message</th>
+                    <?php 
+                        if ($user_check === 'jvalance') {
+                            echo "<th>Delete</th>";
+                        }
+                        
+                    ?> 
                 </tr>
 
                 <?php while ($row = $q->fetch()): ?>
-
+              
                     <tr><td><?php echo $row["ciFirst"] ?></td>
                         <td><?php echo $row["ciLast"] ?></td> 
                         <td><?php echo $row["ciMemberType"] ?></td>
@@ -105,6 +132,12 @@ echo $user_check;
                         <td><?php echo $row["ciHomeAddress"] ?></td> 
                         <td><?php echo $row["ciContactType"] ?></td>
                         <td><a href="#test-popup" class="open-popup-link">Send Text</a></td>
+                        <?php 
+                        if ($user_check === 'jvalance') {
+                            echo "<td><a href= \"/cs148/final/contactDelete.php?id=" . $row['cid'] ."\">Delete</a></td>";
+                        }
+                        
+                        ?>                     
                     </tr>          
 
                 <?php endwhile; ?>                   
